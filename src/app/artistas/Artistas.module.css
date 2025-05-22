@@ -1,0 +1,20 @@
+.cardsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 32px;
+    gap: 16px;
+  }
+  .albunsInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .albumItem {
+    background: #f5f5fa;
+    border-radius: 8px;
+    padding: 12px 18px;
+    min-width: 180px;
+    box-shadow: 0 1px 4px rgba(106, 17, 203, 0.07);
+  }

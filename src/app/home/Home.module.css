@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.backgroundGradient {
+    min-height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+.card {
+    width: 420px;
+    padding: 40px 36px 32px 36px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 8px 32px rgba(106, 17, 203, 0.15), 0 1.5px 8px rgba(0,0,0,0.07);
+    border-radius: 20px;
+    border: 1.5px solid #e3e6f0;
+    transition: box-shadow 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+.card:active {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 20px 48px rgba(106, 17, 203, 0.22), 0 4px 16px rgba(0,0,0,0.13);
+}
+
+.imageContainer {
+    width: 160px;
+    height: 160px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(106, 17, 203, 0.13);
+    background: #f3f6fa;
+    border: 3px solid #e3e6f0;
+    margin-bottom: 24px;
+    margin-right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image {
+    object-fit: cover;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.image:hover {
+    transform: scale(1.04);
+}
+
+.text {
+    font-size: 1.08rem;
+    color: #333;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.textTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #6a11cb;
+    margin-bottom: 12px;
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    text-align: center;
+}
