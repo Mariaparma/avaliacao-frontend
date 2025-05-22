@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ArtistaCard from "./ArtistaCard";
 import styles from "./Artistas.module.css";
 
+
 const HEADERS = { "x-api-key": process.env.NEXT_PUBLIC_API_KEY };
 
 export default function Artistas() {
@@ -55,7 +56,7 @@ export default function Artistas() {
     setModalInfo({ visible: true, artista, albuns: null, loading: true });
 
     const cacheKey = `albuns_${artista.id}`;
-    const cached = sessionStorage.getItem(cacheKey);
+    const cached =  setModalInfo.getItem(cacheKey);
     if (cached) {
       setModalInfo((m) => ({ ...m, albuns: JSON.parse(cached), loading: false }));
       return;
@@ -68,7 +69,7 @@ export default function Artistas() {
           headers: HEADERS,
         }
       );
-      sessionStorage.setItem(cacheKey, JSON.stringify(albuns));
+      setModalInfo.setItem(cacheKey, JSON.stringify(albuns));
       setModalInfo((m) => ({ ...m, albuns, loading: false }));
     } catch {
       toast.error("Erro ao carregar álbuns.");
@@ -83,13 +84,13 @@ export default function Artistas() {
 
   return (
     <div>
-      {/* Header */}
+      
       <header className={styles.header}>
         <h1>🎵 Artistas e Álbuns 🎶</h1>
         <p>Explore os artistas e seus álbuns favoritos!</p>
       </header>
 
-      {/* Lista de Artistas */}
+      
       <Pagination
         current={data.current}
         pageSize={data.pageSize}
@@ -122,7 +123,7 @@ export default function Artistas() {
         </div>
       )}
 
-      {/* Modal */}
+      
       <Modal
         title={`Álbuns de ${modalInfo.artista?.name_artista}`}
         open={modalInfo.visible}
