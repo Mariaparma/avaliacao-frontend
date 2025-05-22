@@ -18,7 +18,7 @@ export default function Profile() {
           />
         </div>
         <Typography.Title level={3} style={{ textAlign: "center" }}>
-          Maria Eduarda Parma
+          Maria Eduarda da Silva Parma
         </Typography.Title>
         <Typography.Paragraph style={{ textAlign: "center" }}>
           2TDS1
@@ -36,9 +36,13 @@ export default function Profile() {
           </li>
         </ul>
         <Link href="/artistas" prefetch>
-          <Button type="primary" style={{ marginTop: 16, width: "100%" }}>
-            Acessar os Artistas e Albuns 🎤
-          </Button>
+        <Button
+  type="primary"
+  className={styles.customButton}
+  style={{ marginTop: 16, width: "100%" }}
+>
+  Acessar os Artistas e Albuns 🎤
+</Button>
         </Link>
       </Card>
     </div>

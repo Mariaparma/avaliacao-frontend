@@ -2,15 +2,11 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Pagination, Modal, Skeleton, Spin } from "antd";
+import { Pagination, Modal, Skeleton } from "antd";
+import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
-import {
-  getSessionStorage,
-  setSessionStorage,
-} from "../../utils/sessionStorage";
-
-import styles from "./Artistas.module.css";
 import ArtistaCard from "./ArtistaCard";
+import styles from "./Artistas.module.css";
 
 const HEADERS = { "x-api-key": process.env.NEXT_PUBLIC_API_KEY };
 
@@ -25,15 +21,15 @@ export default function Artistas() {
   const [modalInfo, setModalInfo] = useState({
     visible: false,
     artista: null,
-    album: null,
+    albuns: null,
     loading: false,
   });
 
   useEffect(() => {
     const fetchArtistas = async () => {
-      const cached = getSessionStorage("artistasData", []);
-      if (cached.length > 0) {
-        setData({ artistas: cached, loading: false, current: 1, pageSize: 5 });
+      const cached = sessionStorage.getItem("artistasData");
+      if (cached) {
+        setData({ artistas: JSON.parse(cached), loading: false, current: 1, pageSize: 5 });
         return;
       }
 
@@ -44,7 +40,7 @@ export default function Artistas() {
             headers: HEADERS,
           }
         );
-        setSessionStorage("artistasData", artistas);
+        sessionStorage.setItem("artistasData", JSON.stringify(artistas));
         setData({ artistas, loading: false, current: 1, pageSize: 5 });
       } catch {
         toast.error("Erro ao carregar artistas");
@@ -56,26 +52,26 @@ export default function Artistas() {
   }, []);
 
   const openModal = async (artista) => {
-    setModalInfo({ visible: true, artista, album: null, loading: true });
+    setModalInfo({ visible: true, artista, albuns: null, loading: true });
 
-    const cacheKey = `album_${artista.id}`;
-    const cached = getSessionStorage(cacheKey, null);
+    const cacheKey = `albuns_${artista.id}`;
+    const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
-      setModalInfo((m) => ({ ...m, album: cached, loading: false }));
+      setModalInfo((m) => ({ ...m, albuns: JSON.parse(cached), loading: false }));
       return;
     }
 
     try {
-      const { data: album } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/album/${artista.id}`,
+      const { data: albuns } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/albuns/${artista.id}`,
         {
           headers: HEADERS,
         }
       );
-      setSessionStorage(cacheKey, album);
-      setModalInfo((m) => ({ ...m, album, loading: false }));
+      sessionStorage.setItem(cacheKey, JSON.stringify(albuns));
+      setModalInfo((m) => ({ ...m, albuns, loading: false }));
     } catch {
-      toast.error("Erro ao carregar álbum.");
+      toast.error("Erro ao carregar álbuns.");
       setModalInfo((m) => ({ ...m, loading: false }));
     }
   };
@@ -87,8 +83,13 @@ export default function Artistas() {
 
   return (
     <div>
-      <h1>Lista de Artistas 🎤</h1>
+      {/* Header */}
+      <header className={styles.header}>
+        <h1>🎵 Artistas e Álbuns 🎶</h1>
+        <p>Explore os artistas e seus álbuns favoritos!</p>
+      </header>
 
+      {/* Lista de Artistas */}
       <Pagination
         current={data.current}
         pageSize={data.pageSize}
@@ -102,7 +103,12 @@ export default function Artistas() {
 
       {data.loading ? (
         <div style={{ display: "flex", justifyContent: "center", margin: 40 }}>
-          <Spin size="large" />
+          <Image
+            src="/media/gif.gif"
+            width={300}
+            height={200}
+            alt="Loading"
+          />
         </div>
       ) : (
         <div className={styles.cardsContainer}>
@@ -116,14 +122,15 @@ export default function Artistas() {
         </div>
       )}
 
+      {/* Modal */}
       <Modal
-        title={modalInfo.artista ? `Álbuns de ${modalInfo.artista.nome}` : ""}
+        title={`Álbuns de ${modalInfo.artista?.name_artista}`}
         open={modalInfo.visible}
         onCancel={() =>
           setModalInfo({
             visible: false,
             artista: null,
-            album: null,
+            albuns: null,
             loading: false,
           })
         }
@@ -132,13 +139,19 @@ export default function Artistas() {
       >
         {modalInfo.loading ? (
           <Skeleton active />
-        ) : modalInfo.album && modalInfo.album.length > 0 ? (
+        ) : modalInfo.albuns ? (
           <div className={styles.albunsInfo}>
-            {modalInfo.album.map((alb) => (
-              <div key={alb.id} className={styles.albumItem}>
-                <strong>{alb.titulo}</strong>
-                <p>Ano: {alb.ano}</p>
-                <p>Gênero: {alb.genero}</p>
+            {modalInfo.albuns.map((album) => (
+              <div key={album.id}>
+                <p>
+                  <span className={styles.label}>Título:</span> {album.titulo}
+                </p>
+                <p>
+                  <span className={styles.label}>Ano:</span> {album.ano}
+                </p>
+                <p>
+                  <span className={styles.label}>Gênero:</span> {album.genero}
+                </p>
               </div>
             ))}
           </div>
